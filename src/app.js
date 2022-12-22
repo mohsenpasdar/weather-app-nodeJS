@@ -43,17 +43,9 @@ app.get('/help', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    if (!req.query.address) {
-        return res.send({
-            error: 'you must provide an address!'
-        })
-    }
-
-    geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
-        if (error) {
-            return res.send({ error }) 
-        }
-        
+    if (req.query.lat) {
+        const latitude = req.query.lat
+        const longitude = req.query.lon
         forecast(latitude, longitude, (error, forecastData) => {
             if (error) {
                 return res.send({ error });
@@ -61,11 +53,34 @@ app.get('/weather', (req, res) => {
 
             res.send({
                 forecast: forecastData, 
-                location,
-                address: req.query.address
+                location: 'Weather in current location:'
             })
         })
-    })
+    } else if (!req.query.address) {
+        return res.send({
+            error: 'you must provide an address!'
+        })
+    } else if (req.query.address) {
+        geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
+            if (error) {
+                return res.send({ error }) 
+            }
+            
+            forecast(latitude, longitude, (error, forecastData) => {
+                if (error) {
+                    return res.send({ error });
+                }
+    
+                res.send({
+                    forecast: forecastData, 
+                    location,
+                    address: req.query.address
+                })
+            })
+        })
+    }
+
+    
 })
 
 app.get('/products', (req, res) => {
