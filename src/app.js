@@ -36,7 +36,7 @@ app.get('/about', (req, res) => {
 
 app.get('/help', (req, res) => {
     res.render('help', {
-        helpText: 'this is some helpful text', 
+        helpText: 'This is some helpful text!', 
         title: 'Help',
         name: 'Mohsen Pasdar'
     })
@@ -81,18 +81,6 @@ app.get('/weather', (req, res) => {
     }
 
     
-})
-
-app.get('/products', (req, res) => {
-    if (!req.query.search) {
-        return res.send({
-            error: 'You must provide a search term!'
-        })
-    }
-    console.log(req.query.search);
-    res.send({
-        products: []
-    })
 })
 
 app.get('/help/*', (req, res) => {
